@@ -172,3 +172,27 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Project specific
+ai-research-tool.log
+backend/ai-research-tool.log
+
+# Frontend specific
+
+# IDE and editor specific
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+.directory
+.Trash-*
+*.sublime*
+
+# API keys and credentials
+*.key
+api_keys.json
+credentials.json
+
+# Local development configurations
+config.local.py
