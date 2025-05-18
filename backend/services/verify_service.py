@@ -27,16 +27,42 @@ def get_system_prompt(entity_type: EntityType) -> str:
     """
     prompts = {
         "academic": (
-            "You are a research assistant that identifies academic professionals. "
-            "Your task is to find accurate information about the academic based on their name and affiliation. "
-            "Focus on current position, research interests, and professional background. "
-            "If you cannot find an exact match, provide the closest match with a lower confidence score."
+            "You are a research assistant that identifies academic professionals based on their name and affiliation.\n\n"
+            "Your task is to return structured, accurate, and current information about the academic's identity.\n\n"
+            "Focus on:\n"
+            "- Full name\n"
+            "- Current affiliation\n"
+            "- Current position/title\n"
+            "- A short professional description (including research interests)\n"
+            "- Confidence in the match\n\n"
+            "Guidelines:\n"
+            "- If multiple matches exist, return the most relevant one based on recency and academic profile completeness.\n"
+            "- If no exact match is found, return the closest relevant match with a reduced confidence score.\n"
+            "- If no match is found at all, return an empty object with \"confidence_score\": 0.\n\n"
+            "Confidence Score Guide:\n"
+            "- 100 = Exact match (name + affiliation + title verified)\n"
+            "- 80-99 = High match (1 fuzzy detail, like abbreviated name or outdated title)\n"
+            "- 50-79 = Partial match (multiple fields fuzzy or inferred)\n"
+            "- 0 = No match found"
         ),
         "startup": (
-            "You are a research assistant that identifies startup founders and their companies. "
-            "Your task is to find accurate information about the founder and their company based on the provided details. "
-            "Focus on the founder's role, the startup's focus area, funding stage, and any notable achievements. "
-            "If you cannot find an exact match, provide the closest match with a lower confidence score."
+            "You are a research assistant that identifies startup founders and their companies based on provided names or organization details.\n\n"
+            "Your task is to return structured, accurate, and current information about the founder and their startup.\n\n"
+            "Focus on:\n"
+            "- Full name of the founder\n"
+            "- Role in the startup\n"
+            "- Startup name and description (what it does)\n"
+            "- Current funding stage and any notable achievements (e.g., awards, acquisitions, press)\n"
+            "- Confidence in the match\n\n"
+            "Guidelines:\n"
+            "- If multiple matches exist, return the most relevant one based on recency and profile completeness.\n"
+            "- If no exact match is found, return the closest relevant match with a reduced confidence score.\n"
+            "- If no match is found at all, return an empty object with \"confidence_score\": 0.\n\n"
+            "Confidence Score Guide:\n"
+            "- 100 = Exact match (founder + startup + role + stage verified)\n"
+            "- 80-99 = High match (1 fuzzy detail, like outdated role or partial name)\n"
+            "- 50-79 = Partial match (multiple fields fuzzy or inferred)\n"
+            "- 0 = No match found"
         )
     }
     return prompts.get(entity_type, prompts["academic"])
@@ -185,16 +211,16 @@ def verify_entity(name: str, affiliation: str, entity_type: EntityType) -> Dict[
         # Prompt for the user
         user_prompt = f"""Find information about {name} from {affiliation}.
         
-        Return a JSON object with EXACTLY these fields:
+        Return a valid JSON object with EXACTLY the following fields:
         {{
-            "full_name": "Complete name of the person",
-            "affiliation": "Current institution or company",
-            "title": "Current position or role",
-            "brief_description": "A 1-2 sentence professional description",
-            "confidence_score": "A number between 0-100 indicating match confidence"
+            "full_name": "Complete name of the person or empty string if not found",
+            "affiliation": "Current institution or company, or empty string if not found",
+            "title": "Current position or role, or empty string if not found",
+            "brief_description": "1–2 sentence summary including research area and academic focus",
+            "confidence_score": "A number from 0–100 indicating match confidence"
         }}
         
-        The JSON object should be valid and properly formatted. Do not include any explanations or additional text.
+        Return only the JSON object. Do not include any additional explanations or commentary.
         """
 
         # Call OpenAI API

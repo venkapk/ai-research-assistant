@@ -27,76 +27,75 @@ def get_system_prompt(entity_type: EntityType) -> str:
         The system prompt as a string
     """
     prompts = {
-        "academic": """You are a research assistant that provides comprehensive information about academic professionals.
-            Your task is to gather and organize information that would be useful for grant preparation and collaboration planning.
-            
-            Focus on finding:
-            1. Current and past research focus areas
-            2. Notable publications, projects, and contributions
-            3. Academic and industry connections
-            4. Previous grants or funding received
-            5. Research impact and public recognition
-            6. Strategic insights that would help in grant applications
-            
-            Be factual, specific, and ensure the information is relevant for academic grant preparation.
-            """,
-        "startup": """You are a research assistant that provides comprehensive information about startup founders and their companies.
-            Your task is to gather and organize information that would be useful for strategic alignment and funding opportunities.
-            
-            Focus on finding:
-            1. Business focus areas and market positioning
-            2. Products, services, and innovations
-            3. Industry connections and partnerships
-            4. Previous funding rounds and investors
-            5. Market presence and company recognition
-            6. Strategic insights that would help in investment pitches
-            
-            Be factual, specific, and ensure the information is relevant for startup funding preparation.
-            """
+    "academic": """You are a research assistant tasked with generating structured, detailed research profiles for academic professionals.
+    
+    Your objective is to gather factual, well-sourced, and relevant data that would support academic grant writing and collaboration strategy.
+    
+    Focus Areas:
+    1. Current and past research focus areas
+    2. Notable publications and projects
+    3. Academic or industry collaborations and affiliations
+    4. Previous grants or research funding
+    5. Public mentions or recognition (e.g., news, awards)
+    6. Strategic insights to support grant planning
+    
+    Guidelines:
+    - Use only verifiable data from credible sources (e.g., university websites, Google Scholar, Scopus, ORCID, funding agency databases).
+    - Do not guess or fabricate insights. If a section has fewer than 3 items, include only what is known.
+    - Include exactly the fields defined in the JSON schema. Return an empty array for any category where data could not be verified.
+    """,
+    
+    "startup": """You are a research assistant tasked with generating structured, detailed profiles for startup founders and their companies.
+    
+    Your objective is to gather factual, well-sourced, and relevant data that would support funding strategy and strategic alignment.
+    Focus Areas:
+    1. Business focus areas and market positioning
+    2. Products, services, and technological innovations
+    3. Strategic partnerships and industry collaborations
+    4. Previous funding rounds, grants, and investors
+    5. Public mentions or recognition (e.g., press coverage, awards, accelerators)
+    6. Strategic insights to support investment pitches or partnership outreach
+    Guidelines:
+    - Use only verifiable data from credible sources (e.g., Crunchbase, company websites, press releases, LinkedIn, funding databases).
+    - Do not guess or fabricate insights. If a section has fewer than 3 items, include only what is known.
+    - Include exactly the fields defined in the JSON schema. Return an empty array for any category where data could not be verified.
+    """
     }
     return prompts.get(entity_type, prompts["academic"])
 
 def get_user_prompt(name, title, affiliation):
     user_prompt = f"""Provide detailed research on {name}, {title} at {affiliation}.
-        
-        Return a valid JSON object with EXACTLY the following structure:
-        {{
-            "research_focus": [
-                "Focus area 1",
-                "Focus area 2",
-                ...
-            ],
-            "projects_publications": [
-                "Project/publication 1",
-                "Project/publication 2",
-                ...
-            ],
-            "institutional_connections": [
-                "Connection 1",
-                "Connection 2",
-                ...
-            ],
-            "funding_history": [
-                "Funding item 1",
-                "Funding item 2",
-                ...
-            ],
-            "public_mentions": [
-                "Mention 1",
-                "Mention 2",
-                ...
-            ],
-            "strategic_insights": [
-                "Strategic insight 1",
-                "Strategic insight 2",
-                ...
-            ]
-        }}
-        
-        Include 3-7 items in each section. Be specific and include relevant details. For academic professionals, focus on research grants and academic collaborations. For startup founders, focus on investment opportunities and strategic partnerships.
-        
-        The JSON object must be valid and properly formatted. Do not include any explanations or additional text outside the JSON object.
-        """
+
+    All data must be specifically linked to this person. Do not include information about the general research at {affiliation} unless it is explicitly tied to {name}'s work.
+    
+    Return a valid JSON object with EXACTLY the following structure:
+    {{
+        "research_focus": [
+            "Focus area 1",
+            "Focus area 2"
+        ],
+        "projects_publications": [
+            "Project or publication 1",
+            "Project or publication 2"
+        ],
+        "institutional_connections": [
+            "Collaborator or institution 1",
+            "Collaborator or institution 2"
+        ],
+        "funding_history": [
+            "Funding agency, project name, year (if known)"
+        ],
+        "public_mentions": [
+            "Mention or recognition 1"
+        ],
+        "strategic_insights": [
+            "Insight derived from verified information to support grants or partnerships"
+        ]
+    }}
+    - Include 3–7 items per field if available. Return fewer if needed, but do not generate unverifiable data.
+    - All information must be accurate, specific, and relevant.
+    - Return only the JSON object. Do not include any extra explanations.
+    """
     return user_prompt
 
 def call_openai_api(system_prompt: str, user_prompt: str) -> Optional[str]:
