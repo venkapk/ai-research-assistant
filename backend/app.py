@@ -7,6 +7,7 @@ load_dotenv()
 
 from routes.api import api
 from utils.logger import get_logger
+import os
 
 # Logger
 logger = get_logger()
@@ -33,5 +34,6 @@ def index():
             return jsonify({"message": "Error running API"}), 500
     
 if __name__ == "__main__":
-    logger.info("Starting backend server at port 5000")
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    logger.info(f"Starting backend server at port {port}")
+    app.run(host="0.0.0.0", port=port, debug=True)

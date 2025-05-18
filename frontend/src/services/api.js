@@ -5,8 +5,8 @@
  * It includes functions for verifying entities and generating research.
  */
 
-// Base URL for API endpoints - change this if your backend runs on a different port
-const API_BASE_URL = 'http://localhost:5000/api';
+// Base URL for API endpoints
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 /**
  * Helper function to handle API responses
