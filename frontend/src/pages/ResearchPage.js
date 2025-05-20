@@ -9,6 +9,10 @@ import {
   InsightIcon 
 } from '../components/icons';
 
+/**
+ * Section component that renders a titled section with an icon and a list of items.
+ * Used across the research page to display different data types.
+ */
 const ResearchSection = ({ title, items, icon, bgColor = false }) => {
   const Icon = icon;
   
@@ -46,6 +50,10 @@ const ResearchSection = ({ title, items, icon, bgColor = false }) => {
   );
 };
 
+/**
+ * Main page that displays detailed research results for a verified entity.
+ * Renders different sections such as research focus, publications, funding, etc.
+ */
 const ResearchPage = () => {
   const { verificationResult, researchResult } = useApp();
 

@@ -1,7 +1,7 @@
 /**
  * API service for communicating with the AI Research Tool backend.
  * 
- * This service connects to your Flask backend running on localhost.
+ * This service connects to your Flask backend.
  * It includes functions for verifying entities and generating research.
  */
 
@@ -40,7 +40,7 @@ const handleResponse = async (response) => {
  */
 export const verifyEntity = async (data) => {
   try {
-    // Based on your api.py, the endpoint expects name, affiliation, and entityType
+    // Based on backend's verification API, the endpoint expects name, affiliation, and entityType
     const response = await fetch(`${API_BASE_URL}/verify`, {
       method: 'POST',
       headers: {
@@ -66,7 +66,7 @@ export const verifyEntity = async (data) => {
  */
 export const generateResearch = async (entityInfo, entityType) => {
   try {
-    // Based on your research_service.py, the endpoint expects entityInfo and entityType
+    // Based on backend's research API, the endpoint expects entityInfo and entityType
     const response = await fetch(`${API_BASE_URL}/research`, {
       method: 'POST',
       headers: {

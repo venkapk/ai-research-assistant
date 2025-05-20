@@ -1,18 +1,22 @@
+/* Center all content inside the main app container */
 .App {
   text-align: center;
 }
 
+/* Style the React logo */
 .App-logo {
   height: 40vmin;
   pointer-events: none;
 }
 
+/* Only apply the spin animation if user hasn't requested reduced motion */
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
 }
 
+/* Header styling: full viewport height, centered content */
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -24,10 +28,12 @@
   color: white;
 }
 
+/* Styling for links in the app */
 .App-link {
   color: #61dafb;
 }
 
+/* Keyframes for rotating the logo */
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

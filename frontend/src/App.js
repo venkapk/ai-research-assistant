@@ -5,6 +5,7 @@ import Footer from './components/Footer';
 import VerifyPage from './pages/VerifyPage';
 import ResearchPage from './pages/ResearchPage';
 
+// MainContent handles the dynamic layout and rendering based on app state
 const MainContent = () => {
   const { activePage, researchResult } = useApp();
   
@@ -25,6 +26,7 @@ const MainContent = () => {
   );
 };
 
+// App wraps everything in context to share state globally
 const App = () => {
   return (
     <AppProvider>
