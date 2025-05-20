@@ -122,7 +122,7 @@ def call_openai_api(system_prompt: str, user_prompt: str) -> Optional[str]:
             #     "type": "web_search_preview",  
             # }]
             web_search_options={
-                "search_context_size": "low"
+                "search_context_size": "medium"
             },
             # temperature=0.3,
             max_tokens=500
