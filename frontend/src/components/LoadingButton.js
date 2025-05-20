@@ -1,5 +1,14 @@
 import React from 'react';
 
+/**
+ * A button component that shows a loading state.
+ * Props:
+ * - isLoading: boolean – whether the button is in a loading state
+ * - onClick: function – click handler function
+ * - loadingText: string – text to display when loading
+ * - text: string – text to display when not loading
+ * - disabled: boolean – optional flag to disable the button externally
+ */
 const LoadingButton = ({ isLoading, onClick, loadingText, text, disabled }) => {
   return (
     <button

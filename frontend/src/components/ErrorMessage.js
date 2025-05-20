@@ -1,6 +1,10 @@
 import React from 'react';
 import { ErrorIcon } from './icons';
 
+/**
+ * ErrorMessage component
+ * Displays an error alert box if a message exists.
+ */
 const ErrorMessage = ({message}) => {
   if (!message) return null;
   return (

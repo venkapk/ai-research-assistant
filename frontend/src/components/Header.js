@@ -1,6 +1,14 @@
 import React from 'react';
 import { LogoIcon } from './icons';
 
+/**
+ * Header component for the AI Research Assistant.
+ * 
+ * Props:
+ * - activePage: string – currently active page ('verify' or 'research')
+ * - setActivePage: function – function to switch active pages
+ * - hasResearchResults: boolean – whether research results are available
+ */
 const Header = ({ activePage, setActivePage, hasResearchResults }) => {
   return (
     <header className="bg-white shadow">
@@ -10,7 +18,7 @@ const Header = ({ activePage, setActivePage, hasResearchResults }) => {
             <div className="w-10 h-10 bg-blue-600 rounded-md flex items-center justify-center">
               <LogoIcon />
             </div>
-            <h1 className="ml-3 text-2xl font-bold text-gray-900">AI Research Tool</h1>
+            <h1 className="ml-3 text-2xl font-bold text-gray-900">AI Research Assistant</h1>
           </div>
           <nav className="flex space-x-4">
             <button 

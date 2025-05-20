@@ -1,5 +1,9 @@
 import React from 'react';
 
+/**
+ * Footer component for the application.
+ * Currently includes a basic centered message.
+ */
 const Footer = () => {
   return (
     <footer className="bg-white">
