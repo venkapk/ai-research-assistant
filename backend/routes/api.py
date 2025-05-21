@@ -2,6 +2,9 @@ from datetime import datetime
 from flask import Blueprint, request, jsonify
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from flask_jwt_extended import jwt_required, get_jwt_identity
+from databases import db
+from databases.research_history import ResearchHistory
 from services.verify_service import verify_entity
 from services.research_service import generate_research
 from utils.logger import get_logger
@@ -107,9 +110,11 @@ def verify():
 
 @api.route('/research', methods=['POST'])
 @limiter.limit("10 per minute")
+@jwt_required(optional=True)
 def research():
     """
     POST endpoint to generate comprehensive research output for a verified entity.
+    For authenticated users, research results are saved to their history.
 
     Expects JSON payload with:
         - entityInfo (dict): Verified information about the entity.
@@ -139,6 +144,40 @@ def research():
             entity_info = data.get('entityInfo', {}),
             entity_type = data.get('entityType', 'academic')
         )
+
+        # Save results to history if user is authenticated
+        current_user_id = None
+        try:
+            current_user_id = get_jwt_identity()
+            if current_user_id is not None and isinstance(current_user_id, str):
+                current_user_id = int(current_user_id)
+        except:
+            logger.warning("User is not authenticated, continue without saving")
+            pass
+
+        if current_user_id:
+            try:
+                # Create research history entry
+                entity_info = data.get('entityInfo', {})
+                history_item = ResearchHistory(
+                    user_id = current_user_id,
+                    entity_name = entity_info.get('full_name', ''),
+                    entity_affiliation=entity_info.get('affiliation', ''),
+                    entity_type=data.get('entityType', 'academic'),
+                    research_data=result
+                )
+
+                db.session.add(history_item)
+                db.session.commit
+
+                # Add history id to result
+
+                result['history_id'] = history_item.id
+                logger.info(f"Research saved to history ID: {history_item.id} for user: {user_id}")
+
+            except Exception as e:
+                logger.error(f"Error saving research to history: {str(e)}")
+                db.session.rollback()                
 
         return create_response(True, result, None, 200)
     
